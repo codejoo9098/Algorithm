@@ -1,66 +1,62 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 public class B_11725 {
 	static int n;
-	static int[][] temp;
-	static int[][] num;
-	static int[] result;
+	static ArrayList<Integer>[] list;
+	static int[] parent;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		n = sc.nextInt();
-		sc.nextLine();
+	@SuppressWarnings("unchecked")
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		String str;
+		String[] split;
+		int num1, num2;
+		n = Integer.parseInt(br.readLine());
 
-		temp = new int[n + 1][2];
-		num = new int[n + 1][2];
-		result = new int[n + 1];
-		
-		for (int i = 1; i < n; i++) {
-			temp[i][0] = sc.nextInt();
-			temp[i][1] = sc.nextInt();
+		list = new ArrayList[n + 1];
+		parent = new int[n + 1];
+		for (int i = 1; i <= n; i++) {
+			list[i] = new ArrayList<Integer>();
 		}
 		
-		getResult(1);
-		sc.close();
+		for (int i = 1; i < n; i++) {
+			str = br.readLine();
+			split = str.split(" ");
+			
+			num1 = Integer.parseInt(split[0]);
+			num2 = Integer.parseInt(split[1]);
+			
+			list[num1].add(num2);
+			list[num2].add(num1);
+		}
+		
+		getResult(1, -1);
+
+		for (int i = 2; i <= n; i++) {
+			System.out.println(parent[i]);
+		}
+		
+		br.close();
+		bw.flush();
+		bw.close();
 	}
 
-	private static void getResult(int cur) {
+	private static void getResult(int cur, int parentNum) {
 		
-		for (int i = 1; i < n; i++) {
+		for (int i = 0; i < list[cur].size(); i++) {
 			
-			for (int j = 0; j < 2; j++) {
-				
-				if (temp[i][j] == cur) {
-					
-					if (j == 0) {
-						
-						if (num[cur][0] == 0) {
-							num[cur][0] = temp[i][1];
-						}
-						else {
-							num[cur][1] = temp[i][1];
-						}
-						
-						getResult(temp[i][1]);
-						
-					}
-					else {
-						
-						if (num[cur][0] == 0) {
-							num[cur][0] = temp[i][0];
-						}
-						else {
-							num[cur][1] = temp[i][0];
-						}
-						
-						getResult(temp[i][0]);
-						
-					}
-					
-				}
+			if (list[cur].get(i) != parentNum) {
+				parent[list[cur].get(i)] = cur;
+				getResult(list[cur].get(i), cur);
 			}
-			
 		}
+		
 	}
 
 }

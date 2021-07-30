@@ -31,16 +31,14 @@ public class B_2606 {
 			list[n2].add(n1);
 		}
 		
-		deque.addFirst(1);
 		isVisited[1] = true;
 		
 		getInfestedComputer(1);
-		System.out.println(infestedCom.size() - 1);
+		System.out.println(infestedCom.size());
 		sc.close();
 	}
 
 	private static void getInfestedComputer(int cur) {
-		
 		for (int i = 0; i < list[cur].size(); i++) {
 			
 			if (!isVisited[list[cur].get(i)]) {
@@ -49,10 +47,10 @@ public class B_2606 {
 			}
 		}
 		
-		infestedCom.addFirst(deque.removeLast());
-		
 		if (!deque.isEmpty()) {
-			getInfestedComputer(deque.getLast());
+			int temp = deque.removeLast();
+			infestedCom.addFirst(temp);
+			getInfestedComputer(temp);
 		}
 	}
 
